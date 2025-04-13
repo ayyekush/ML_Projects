@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amazon Review Scraper</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <!-- Left sidebar for configuration -->
+    <div class="sidebar">
+      <!-- <h1 class="glow-text" style="font-size: 54px;">SHOULD YOU BUY IT?</h1> -->
+      <h1 class="glow-text" style="font-size: 55px; margin-bottom:10px;">SHOULD YOU BUY IT?</h1>
+  
+      <div class="social-icons" style="display: flex; justify-content: center; margin-bottom: 15px;">
+        <a href="https://github.com/" target="_blank" style="margin: 0 10px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="social-icon" style="color: var(--primary);">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/" target="_blank" style="margin: 0 10px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="social-icon" style="color: var(--primary);">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect x="2" y="9" width="4" height="12"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
+        </a>
+      </div>
+      <div class="logs" id="logs" style="height: 170px; margin-top:0;">
+        <div class="log-item">All pipes checked. Ready to dive into amazon's ass.</div>
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="speed">Speed</label>
+        <select id="speed" >
+          <option value="FAST">Fast</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="SLOW" selected>Slow</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="num-reviews">Number of Reviews to Scrape:</label>
+        <input type="number" id="num-reviews" value="2" style="color: #ff00e6;">
+      </div>
+      
+      <button id="start-scrape" class="electric-border">Start Scraping</button>
+      <button id="in-process" style="display: none;">In Process...</button>
+      <button id="stop-scrape" class="button-stop">Stop Scraping</button>
+    </div>
+    
+    <!-- Main content area split into sections -->
+    <div class="main-content">
+      <!-- Browser chrome in upper section -->
+      <div class="live-view">
+        <div class="browser-chrome" >
+          <div class="browser-buttons">
+            <div class="browser-button red"></div>
+            <div class="browser-button yellow"></div>
+            <div class="browser-button green"></div>
+          </div>
+          <input type="url" id="product-url" placeholder="Enter Your URL here">
+        </div>
+        
+        <!-- Browser content with split view inside -->
+        <div class="browser-content" style="background-color: black;">
+          <!-- Left side (60%) for live review animations -->
+          <div class="live-view-animation">
+            <div style="text-align: center;" class="live-view-header">
+              <h2 style="font-size: 30px;">Live Review Scraping</h2>
+            </div>
+            <div class="animation-container" style="text-align: centre;">
+              <!-- This is where the pop-up reviews will appear -->
+              <div id="review-popup" class="review-popup" style="text-align: centre;">
+                <div class="review-title" style="text-align: centre;">Review #<p style="text-align: left;" id="review-number">1</p></div>
+                <div class="review-content" id="review-content"></div>
+              </div>
+              
+              <!-- Loading animation for when scraping starts -->
+              <div class="loading-container" id="loading-animation">
+                <div class="electric-pulse"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right side (40%) for scrollable collected reviews -->
+          <div class="live-view-collected" style="background-color: black;">
+            <div class="collected-header" style=" background-color: rgba(20, 25, 35, 0.5); text-align: center;">
+              <h3 style=" font-size: 30px;">Collected Reviews</h3>
+              <p>Total reviews: <strong id="review-count">0</strong></p>
+            </div>
+            <div id="live-reviews-container">
+              <!-- <div class="placeholder">No reviews collected yet</div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Lower section: Results view -->
+      <div class="results-view">
+        <h2 style="font-size: xx-large; color:#2d738778";>NLP Model Result:</h2>
+        <p><strong id="model-prediction" style="color: rgb(230, 121, 249);"></strong></p>
+        
+        <!-- Added sentiment meter -->
+        <div class="sentiment-meter">
+          <div class="sentiment-indicator" id="sentiment-indicator"></div>
+        </div>
+        <div class="sentiment-labels" style="color: rgba(208, 205, 209, 0.256);">
+          <span>Negative</span>
+          <span>Positive</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='spine.js') }}"></script>
+</body>
+</html>

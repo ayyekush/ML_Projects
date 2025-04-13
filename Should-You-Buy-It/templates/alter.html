@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amazon Review Scraper</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      height: 100%;
+      overflow: hidden; /* Prevent page scrolling */
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+    }
+    
+    .container {
+      display: flex;
+      height: 100%;
+      width: 100%;
+    }
+    
+    .sidebar {
+      width: 350px;
+      min-width: 350px; /* Fixed width to prevent shrinking */
+      background-color: #232f3e;
+      color: white;
+      padding: 20px;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      overflow-y: auto;
+      height: 100%;
+    }
+    
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 20px;
+      overflow: hidden; /* Prevent scrolling in main content */
+    }
+    
+    .live-view {
+      flex: 3; /* 75% ratio */
+      background-color: #f8f8f8;
+      position: relative;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden; /* Prevent overflow */
+    }
+    
+    .results-view {
+      flex: 1; /* 25% ratio */
+      padding: 20px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    h1 {
+      color: #ff9900;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    
+    h2 {
+      color: #232f3e;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    
+    h3 {
+      color: #232f3e;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    
+    button {
+      background-color: #ff9900;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+    
+    button:hover {
+      background-color: #e68a00;
+    }
+    
+    .button-stop {
+      background-color: #e74c3c;
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .browser-chrome {
+      height: 40px;
+      min-height: 40px;
+      background-color: #f1f1f1;
+      border-radius: 12px 12px 0 0;
+      border: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+    }
+    
+    .browser-buttons {
+      display: flex;
+      gap: 8px;
+      margin-right: 15px;
+    }
+    
+    .browser-button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    .red { background-color: #ff5f56; }
+    .yellow { background-color: #ffbd2e; }
+    .green { background-color: #27c93f; }
+    
+    .browser-content {
+      flex: 1;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      display: flex;
+      overflow: hidden;
+    }
+    
+    .live-view-animation {
+      flex: 6;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .live-view-header {
+      padding: 20px 20px 10px 20px;
+    }
+    
+    .animation-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    
+    .live-view-collected {
+      flex: 4;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .collected-header {
+      padding: 20px 20px 10px 20px;
+    }
+    
+    #live-reviews-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 20px;
+      background-color: #f9f9f9;
+    }
+    
+    .logs {
+      font-family: 'Courier New', monospace;
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 4px;
+      height: 150px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    
+    .log-item {
+      margin-bottom: 5px;
+      border-bottom: 1px solid #34495e;
+      padding-bottom: 5px;
+    }
+    
+    .placeholder {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      flex-direction: column;
+      color: #666;
+    }
+    
+    .review-popup {
+      position: absolute;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      padding: 15px;
+      max-width: 60%;
+      z-index: 10;
+      opacity: 0;
+    }
+    
+    .review-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #232f3e;
+      font-size: 14px;
+    }
+    
+    .review-content {
+      line-height: 1.4;
+      font-size: 13px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    
+    #model-results-container {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+      margin-top: 15px;
+    }
+    
+    .review-item {
+      background-color: #fff;
+      border-left: 4px solid #ff9900;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .review-item-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      color: #555;
+      font-size: 12px;
+    }
+    
+    /* Animation for popup fade in/out */
+    @keyframes popupFadeIn {
+      from { opacity: 0; transform: translateY(100px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes popupFadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-100px); }
+    }
+    
+    .fade-in {
+      animation: popupFadeIn 0.5s forwards;
+    }
+    
+    .fade-out {
+      animation: popupFadeOut 0.5s forwards;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left sidebar for configuration -->
+    <div class="sidebar">
+      <h1 style="font-size:xxx-large;">SHOULD YOU BUY IT?</h1>
+      <div class="logs" id="logs">
+        <div class="log-item">> All pipes checked. Ready to dive into amazon's ass.</div>
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="speed">Speed</label>
+        <select id="speed">
+          <option value="Fast">Fast</option>
+          <option value="Slow" selected>Slow</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="num-reviews">Number of Reviews to Scrape:</label>
+        <input type="number" id="num-reviews" value="2">
+      </div>
+      
+      <button id="start-scrape">Start Scraping</button>
+      <button id="in-process" style="display: none; background-color:#ee8888;">In Process...</button>
+    </div>
+    
+    <!-- Main content area split into sections -->
+    <div class="main-content">
+      <!-- Browser chrome in upper section -->
+      <div class="live-view">
+        <div class="browser-chrome">
+          <div class="browser-buttons">
+            <div class="browser-button red"></div>
+            <div class="browser-button yellow"></div>
+            <div class="browser-button green"></div>
+          </div>
+          <input type="url" id="product-url" placeholder="Enter Your URL here" value="https://www.amazon.in/GUNAHO-KA-DEVTA-DHARAMVEER-BHARTI/dp/B01MFDA7D5/ref=sr_1_1?crid=3CK67C7RWOT8Y&dib=eyJ2IjoiMSJ9.R_6lnmmAU5zgJpshyz9Dp4v9jOhm9J-1rTVwAEAmz-YFTkxWk9C46qtTXl5O4Zw4qOARqzj2x4dT2ZJHku-A_OYghSsxh_QasIStGjLUTE9HNAJdX1Ylj_mX_Rjm5_JGzbg-nBba-eBeTDa08_bKbzPXtk3nACFn3ybMucq4Z8IbmmnuyT9jmgLYfZLA3-TihRMJwJDOlMrJj7hrbViH_e-TRdHOpl6vzb5IBb8RrPM.-Mq2N-sdlLnl-URvZV-JTgk0NhkQ9BP1hJ5-mdDq2o0&dib_tag=se&keywords=gunaho+ka+devta&qid=1744238755&sprefix=gunaho+ka+dev%2Caps%2C362&sr=8-1">
+        </div>
+        
+        <!-- Browser content with split view inside -->
+        <div class="browser-content">
+          <!-- Left side (60%) for live review animations -->
+          <div class="live-view-animation">
+            <div class="live-view-header">
+              <h2>Live Review Scraping</h2>
+            </div>
+            <div class="animation-container">
+              <!-- This is where the pop-up reviews will appear -->
+              <div id="review-popup" class="review-popup">
+                <div class="review-title">Review #<span id="review-number">1</span></div>
+                <div class="review-content" id="review-content"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right side (40%) for scrollable collected reviews -->
+          <div class="live-view-collected">
+            <div class="collected-header">
+              <h3>Collected Reviews</h3>
+              <p>Total reviews: <strong id="review-count">0</strong></p>
+            </div>
+            <div id="live-reviews-container">
+              <div class="placeholder">No reviews collected yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Lower section: Results view -->
+      <div class="results-view">
+        <h2>NLP Model Result</h2>
+        <p>Model Prediction: <strong id="model-prediction">Waiting for data...</strong></p>
+        <div id="model-results-container">
+          <!-- Model results will be added here -->
+          <div class="placeholder">Waiting for analysis...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const modelResults = document.getElementById('model-results-container');
+    const modelPrediction = document.getElementById('model-prediction');
+    const logs = document.getElementById('logs');
+    const liveReviewsContainer = document.getElementById('live-reviews-container');
+    const popup = document.getElementById('review-popup');
+    
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    // Hide the popup initially
+    popup.style.display = 'none';
+    
+    //Fn: Add a log message :<-message(str) ->:None
+    function addLog(message) {
+      //creating a new div for message
+      const logItem = document.createElement('div');
+      logItem.className = 'log-item';
+      logItem.textContent = `${message}`;
+      //appending it to main logs div
+      document.querySelector(".logs").appendChild(logItem);
+      document.querySelector(".logs").scrollTop = logs.scrollHeight;
+    }
+
+    //Start button handler
+    document.getElementById('start-scrape')
+        .addEventListener('click', () => {
+        const url=document.getElementById('product-url').value.trim();
+        const speed=document.getElementById('speed').value;
+        const reviewsToScrape = parseInt(document.getElementById('num-reviews').value) ||10;
+        
+        if (!url) {
+            addLog('!!! Not A Valid Amazon product URL !!!');
+            return;
+        }
+        document.getElementById('start-scrape').style.display='none';
+        document.getElementById('in-process').style.display='block';
+        
+        // Add a log message
+        addLog(`URL: ${url}`);
+        addLog(`Speed: ${speed}`);
+        addLog(`Started analyzing ${reviewsToScrape} reviews...`);
+        
+        if (speed=="Fast"){//not visualize, instant ans
+            fetch('/fast-reviews-scrape', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url,reviewsToScrape }),
+
+            }).then((response)=>{response.json()})
+            .then((result)=>{
+                WordCloudAddress=result["WordCloudAddress"]
+                async function displayReviewsWithDelay(reviews) {
+                    for (const [index, text] of reviews.entries()) {
+                        displayReview(index, text); // your custom display logic
+                        await delay(500); // 500ms delay between each review
+                    }
+                }
+                displayReviewsWithDelay(result["ScrapedReviewsList"])
+                displayMLResult(result["prediction"])
+            })
+        }
+        else if (speed=="Slow"){//visualise
+            fetch("/slow-reviews-scrape",{
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify({url,reviewsToScrape}),
+
+            }).then((response)=>response.json())
+              .then((result)=>{
+                displayMLResult(result["prediction"])
+
+                document.querySelector('.live-view-animation h2').innerHTML="Most Commonly Found Words:";
+                const imgAddress = "/static/alpha.jpg";
+                // Clear the animation container and add the WordCloud image
+                const animationContainer = document.querySelector('.animation-container');
+                animationContainer.innerHTML = ''; // Remove any existing content including review popups
+                    
+                // Create and add the WordCloud image
+                const wordCloudImg = document.createElement('img');
+                wordCloudImg.src = imgAddress;
+                wordCloudImg.style.maxWidth = '100%';
+                wordCloudImg.style.maxHeight = '100%';
+                wordCloudImg.style.objectFit = 'contain';
+                wordCloudImg.alt = 'WordCloud of most common words in reviews';
+                    
+                // Add the image to the container
+                animationContainer.appendChild(wordCloudImg);
+            })
+            let prevIndex = -1;
+            const displayedReviews = new Set(); // Track displayed reviews
+            
+            const interval1 = setInterval(() => {
+                fetch('/latest-review', {
+                    method: "GET",
+                    headers: {"Content-Type": "application/json"},
+                })
+                .then((response) => response.json())
+                .then((result) => {
+                    console.log(result);
+                    if (result["reviewText"] != "NULL") {
+                        const newIndex = result["rNo"]; // Properly declare with const
+                        const text = result["reviewText"];
+                        
+                        // Only display if we haven't shown this index yet
+                        if (!displayedReviews.has(newIndex)) {
+                            displayedReviews.add(newIndex);
+                            displayReview(newIndex, text);
+                            prevIndex = Math.max(prevIndex, newIndex); // Update prevIndex
+                            
+                            // Update count display
+                            document.getElementById('review-count').textContent = displayedReviews.size;
+                        }
+                        
+                        if (displayedReviews.size >= reviewsToScrape) {
+                            clearInterval(interval1);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching latest review:", error);
+                    addLog(`Error: ${error.message}`);
+                });
+            }, 100);
+        }
+          });
+    
+    function displayReview(index, text) {
+        // Set content first
+        document.getElementById('review-number').textContent = index;
+        document.getElementById('review-content').textContent = text;
+        
+        // Important: Reset all classes and make sure element is in DOM first
+        popup.classList.remove('fade-in', 'fade-out');
+        popup.style.display = 'block';
+        popup.style.opacity = '0';  // Explicitly set opacity
+        
+        // Force a browser reflow before adding animation class
+        void popup.offsetWidth;
+        
+        // Start animation after a tiny delay to ensure display:block has taken effect
+        setTimeout(() => {
+            popup.classList.add('fade-in');
+            
+            // After a delay, start fade out animation
+            setTimeout(() => {
+            popup.classList.remove('fade-in');
+            void popup.offsetWidth; // Force reflow
+            popup.classList.add('fade-out');
+            
+            // Wait for fade out to complete, then add to collected reviews
+            setTimeout(() => {
+                // Add to collected reviews with fade-in effect
+                const item = document.createElement('div');
+                item.className = 'review-item';
+                item.innerHTML = `
+                <div class="review-item-header">
+                    <span>Review #${index}</span>
+                </div>
+                <div>${text}</div>
+                `;
+                
+                // Clear placeholder if it exists
+                if (liveReviewsContainer.querySelector('.placeholder')) {
+                liveReviewsContainer.innerHTML = '';
+                }
+                
+                liveReviewsContainer.appendChild(item);
+                liveReviewsContainer.scrollTop = liveReviewsContainer.scrollHeight;
+                
+                // Update count
+                document.getElementById('review-count').textContent = index;
+                
+                // Log
+                addLog(`Received review #${index}`);
+                
+                // Hide popup after animation completes
+                setTimeout(() => {
+                popup.style.display = 'none';
+                }, 100);
+            }, 450); // Add to container as the popup is finishing its fade out
+            }, 1900); // Show the popup for 2 seconds before fading out
+        }, 20); // Small delay to ensure display:block has taken effect
+    }
+    
+    // Display the ML model results
+    function displayMLResult(pred) {
+      modelPrediction.textContent = pred;
+      
+      // Clear previous content and display results
+      modelResults.innerHTML = `
+        <div class="review-item" style="border-left: none; margin-bottom: 0;">
+          <div>pred</div>
+        </div>
+      `;
+      
+      // Log
+      addLog(`Received model prediction: ${pred}`);
+    }
+  </script>
+</body>
+</html>

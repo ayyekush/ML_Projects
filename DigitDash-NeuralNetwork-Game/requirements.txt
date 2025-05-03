@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+jinja2
+pillow
+matplotlib
+PIL
+tensorflow
+keras
+numpy
+pydantic

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIGIT DASH: MNIST Challenge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <header>
+        <h1 class="neon-text glitch-text" style="font-size: 120px; color:#f95745">DIGIT DASH</h1>
+        <p style="font-size:xx-large; color:#52a3de">Digit Drawing Neural Network Challenge</p>
+        <p style="color: #52a3de;">By Kushagra Agrawal</p>
+        <div class="social-links">
+            <a href="https://github.com" target="_blank" class="social-link">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://linkedin.com" target="_blank" class="social-link">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+        </div>
+    </header>
+    
+    <div class="cyberpunk-container">
+        <div class="game-area">
+            <div id="loginScreen">
+                <h2 class="neon-text glitch-element" data-text="ENTER YOUR HANDLE" style="justify-content: center; text-align:center; color:#f95745">ENTER YOUR NAME</h2>
+                <input type="text" id="userIdInput" placeholder="PLAYER NAME">
+                <!-- <h2 class="neon-text glitch-element" data-text="ENTER YOUR HANDLE" style="justify-content: center; text-align:center; font-size:large">(PLEASE DRAW A LITTLE SMALL AND IN THE MIDDLE OF THE CANVAS FOR ACCURATE RESULTS.)</h2> -->
+                <button id="startGameBtn" class="glitch-element" data-text="START CHALLENGE">START CHALLENGE</button>
+            </div>
+            
+            <div id="gameScreen" class="hidden">
+                <div class="game-info">
+                    <div class="timer">TIME: <span id="timerDisplay">30</span>s</div>
+                    <div class="score">SCORE: <span id="scoreDisplay">0</span></div>
+                </div>
+                <p style="text-align: center; font-size:30px">Please draw it in the center and make it slightly smaller</p>
+                <div class="target-digit glitch-element" data-text="DRAW:">
+                    DRAW: <span id="targetDigitDisplay">?</span>
+                </div>
+                
+                <div class="canvas-container">
+                    <canvas id="drawingCanvas" width="320" height="320"></canvas>
+                </div>
+                
+                <div class="prediction-result">
+                    <div class="prediction-box glitch-element" data-text="YOUR DIGIT">
+                        <div>YOUR DIGIT</div>
+                        <div id="predictionDisplay" class="neon-text">?</div>
+                    </div>
+                    <div class="prediction-box glitch-element" data-text="STATUS">
+                        <div>STATUS</div>
+                        <div id="matchStatus" class="neon-text">WAITING</div>
+                    </div>
+                </div>
+                
+                <div class="game-status neon-text" id="gameStatus">
+                    Draw the target digit to score points!
+                </div>
+                
+                <div class="preview-area">
+                    <canvas id="mnistPreview" width="28" height="28"></canvas>
+                </div>
+            </div>
+            
+            <div id="resultScreen" class="hidden result-screen">
+                <div class="result-content">
+                    <h2 class="neon-text glitch-text">GAME OVER</h2>
+                    <p>FINAL SCORE: <span id="finalScore" class="neon-text">0</span></p>
+                    <p>ACCURACY: <span id="accuracy" class="neon-text">0%</span></p>
+                    <button id="playAgainBtn" class="glitch-element" data-text="PLAY AGAIN">PLAY AGAIN</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <div class="login-area" >
+                <h3 class="neon-text" id="playerInf" style="color: #f95745;">NOT LOGGED IN</h3>
+            </div>
+            
+            <div class="leaderboard" >
+                <h3 class="neon-text glitch-element" data-text="TOP PLAYERS" style="color:  #52a3de;" >LEADERBOARD</h3>
+                <div id="leaderboardList" style="color: #db9e97;" >
+                    <!-- Leaderboard entries will be added here -->
+                    <div class="leaderboard-entry" >
+                        <div style="color: #90ddab;">Loading...</div>
+                        <div style="color: #90ddab;">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 DIGIT DASH | Neural Network Gaming Experience</p>
+    </footer>
+     <script >
+        document.addEventListener('DOMContentLoaded', function() {
+            // Game elements
+            const loginScreen = document.getElementById('loginScreen');
+            const gameScreen = document.getElementById('gameScreen');
+            const resultScreen = document.getElementById('resultScreen');
+            const userIdInput = document.getElementById('userIdInput');
+            const startGameBtn = document.getElementById('startGameBtn');
+            const playAgainBtn = document.getElementById('playAgainBtn');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const targetDigitDisplay = document.getElementById('targetDigitDisplay');
+            const predictionDisplay = document.getElementById('predictionDisplay');
+            const matchStatus = document.getElementById('matchStatus');
+            const gameStatus = document.getElementById('gameStatus');
+            const finalScore = document.getElementById('finalScore');
+            const accuracy = document.getElementById('accuracy');
+            const playerInfo = document.getElementById('playerInfo');
+            const leaderboardList = document.getElementById('leaderboardList');
+            
+            // Canvas elements
+            const canvas = document.getElementById('drawingCanvas');
+            const ctx = canvas.getContext('2d');
+            const mnistPreview = document.getElementById('mnistPreview');
+            const mnistCtx = mnistPreview.getContext('2d');
+            
+            // Game state
+            let isDrawing = false;
+            let gameActive = false;
+            let currentUserId = '';
+            let currentScore = 0;
+            let totalAttempts = 0;
+            let correctAttempts = 0;
+            let currentTargetDigit = null;
+            let timeRemaining = 30;
+            let timerInterval = null;
+            let lastX, lastY;
+            let leaderboard = []; // Initialize leaderboard as empty array
+            
+            // Initialize display states
+            if (loginScreen) loginScreen.style.display = 'block';
+            if (gameScreen) gameScreen.style.display = 'none';
+            if (resultScreen) resultScreen.style.display = 'none';
+            
+            // Set up canvas if it exists
+            if (ctx) {
+                ctx.strokeStyle = '#ff3333';
+                ctx.lineWidth = 18;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+            
+            // Function to fetch leaderboard from server
+            async function fetchLeaderboard() {
+                try {
+                    const response = await fetch('/api/leaderboard');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    leaderboard = await response.json();
+                    updateLeaderboard(); // Update the UI
+                } catch (error) {
+                    console.error('Error fetching leaderboard:', error);
+                    // Use default leaderboard if fetch fails
+                    useDefaultLeaderboard();
+                }
+            }
+            
+            // Function to provide a default leaderboard when server fetch fails
+            function useDefaultLeaderboard() {
+                leaderboard = [
+                    { userId: "Player1", score: 15 },
+                    { userId: "Player2", score: 12 },
+                    { userId: "Player3", score: 10 }
+                ];
+                updateLeaderboard();
+            }
+            
+            // Function to update score on the server
+            async function updateLeaderboardWithCurrentScore() {
+                if (!currentUserId) return; // Don't update if no user ID
+                
+                try {
+                    const response = await fetch('/api/score', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            userId: currentUserId,
+                            score: currentScore
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    // The server returns the updated leaderboard
+                    leaderboard = await response.json();
+                    updateLeaderboard(); // Update the UI
+                } catch (error) {
+                    console.error('Error updating leaderboard:', error);
+                    // Update local leaderboard if server update fails
+                    updateLocalLeaderboard();
+                }
+            }
+            
+            // Function to update leaderboard locally if server update fails
+            function updateLocalLeaderboard() {
+                // Check if user already exists in leaderboard
+                const existingEntryIndex = leaderboard.findIndex(entry => entry.userId === currentUserId);
+                
+                if (existingEntryIndex !== -1) {
+                    // Update only if the new score is higher
+                    if (currentScore > leaderboard[existingEntryIndex].score) {
+                        leaderboard[existingEntryIndex].score = currentScore;
+                    }
+                } else {
+                    // Add new user to leaderboard
+                    leaderboard.push({ userId: currentUserId, score: currentScore });
+                }
+                
+                // Sort and slice leaderboard
+                leaderboard.sort((a, b) => b.score - a.score);
+                leaderboard = leaderboard.slice(0, 10); // Keep only top 10
+                
+                updateLeaderboard();
+            }
+            
+            // Function to update leaderboard UI
+            function updateLeaderboard() {
+                if (!leaderboardList) return;
+                
+                // Clear leaderboard
+                leaderboardList.innerHTML = '';
+                
+                // Handle empty leaderboard case
+                if (!leaderboard || !Array.isArray(leaderboard) || leaderboard.length === 0) {
+                    const noDataElement = document.createElement('div');
+                    noDataElement.className = 'leaderboard-entry';
+                    noDataElement.textContent = 'No scores yet';
+                    leaderboardList.appendChild(noDataElement);
+                    return;
+                }
+                
+                // Add leaderboard entries
+                leaderboard.forEach((entry, index) => {
+                    const entryElement = document.createElement('div');
+                    entryElement.className = 'leaderboard-entry';
+                    
+                    const rankName = document.createElement('div');
+                    rankName.textContent = `${index + 1}. ${entry.userId}`;
+                    
+                    const score = document.createElement('div');
+                    score.textContent = entry.score;
+                    
+                    entryElement.appendChild(rankName);
+                    entryElement.appendChild(score);
+                    leaderboardList.appendChild(entryElement);
+                });
+            }
+            
+            // Fetch leaderboard when page loads
+            fetchLeaderboard();
+            
+            // Drawing event listeners - add only if canvas exists
+            if (canvas) {
+                canvas.addEventListener('mousedown', startDrawing);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', stopDrawing);
+                canvas.addEventListener('mouseout', stopDrawing);
+                
+                // Touch support
+                canvas.addEventListener('touchstart', handleTouch);
+                canvas.addEventListener('touchmove', handleTouch);
+                canvas.addEventListener('touchend', stopDrawing);
+            }
+            
+            // Button event listeners - add only if buttons exist
+            if (startGameBtn) {
+                startGameBtn.addEventListener('click', startGame);
+            }
+            
+            if (playAgainBtn) {
+                playAgainBtn.addEventListener('click', restartGame);
+            }
+            
+            // Add glitch effect periodically to elements
+            setInterval(() => {
+                const glitchElements = document.querySelectorAll('.glitch-element');
+                if (glitchElements.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * glitchElements.length);
+                    glitchElements[randomIndex].classList.add('glitch-active');
+                    setTimeout(() => {
+                        glitchElements[randomIndex].classList.remove('glitch-active');
+                    }, 200);
+                }
+            }, 3000);
+            
+            function startGame() {
+                alert("Do draw your digit in the middle of canvas and slightly smaller for accurate results.")
+                if (!userIdInput) return;
+                
+                const userId = userIdInput.value.trim();
+                if (!userId) {
+                    alert('Please enter a player name to continue!');
+                    return;
+                }
+                
+                currentUserId = userId;
+                if (playerInfo) {
+                    playerInfo.innerHTML = `playing as: ${currentUserId}`;
+                }
+                
+                // Reset game state values
+                timeRemaining = 30; // Reset timer back to 15 seconds
+                currentScore = 0;   // Reset score
+                totalAttempts = 0;  // Reset attempts
+                correctAttempts = 0; // Reset correct attempts
+                
+                // Update UI to reflect reset values
+                if (timerDisplay) timerDisplay.textContent = timeRemaining;
+                if (timerDisplay) {
+                    timerDisplay.style.color = ''; // Reset timer color
+                    timerDisplay.style.textShadow = ''; // Reset timer shadow
+                }
+                if (scoreDisplay) scoreDisplay.textContent = '0';
+                
+                // Show game screen
+                if (loginScreen) loginScreen.style.display = 'none';
+                if (gameScreen) gameScreen.style.display = 'block';
+                if (resultScreen) resultScreen.style.display = 'none';
+                
+                // Add a small delay to ensure the DOM has updated
+                setTimeout(() => {
+                    // Get the canvas container
+                    const canvasContainer = document.querySelector('.canvas-container');
+                    
+                    if (canvasContainer) {
+                        // Calculate the position to center the canvas in the viewport
+                        const rect = canvasContainer.getBoundingClientRect();
+                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                        const centerPosition = rect.top + scrollTop - (window.innerHeight / 2) + (rect.height / 2);
+                        
+                        // Scroll to the calculated position
+                        window.scrollTo({
+                            top: centerPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 100);
+                
+                // Generate first target digit
+                generateTargetDigit();
+                
+                // Start timer
+                gameActive = true;
+                clearInterval(timerInterval); // Clear any existing interval
+                timerInterval = setInterval(updateTimer, 1000);
+                ensureNoAnimationInterference();
+            }
+            
+            function restartGame() {
+                if (resultScreen) resultScreen.style.display = 'none';
+                if (loginScreen) loginScreen.style.display = 'block';
+                if (userIdInput) userIdInput.value = currentUserId;
+            }
+            
+            function endGame() {
+                gameActive = false;
+                clearInterval(timerInterval);
+                
+                // Calculate accuracy
+                const accuracyValue = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 0;
+                
+                // Update result screen
+                if (finalScore) finalScore.textContent = currentScore;
+                if (accuracy) accuracy.textContent = accuracyValue + '%';
+                
+                // Show result screen
+                if (gameScreen) gameScreen.style.display = 'none';
+                if (resultScreen) resultScreen.style.display = 'block';
+                
+                // Update leaderboard
+                updateLeaderboardWithCurrentScore();
+            }
+            
+            function updateTimer() {
+                timeRemaining--;
+                if (timerDisplay) timerDisplay.textContent = timeRemaining;
+                
+                if (timeRemaining <= 0) {
+                    endGame();
+                } else if (timeRemaining <= 5) {
+                    if (timerDisplay) {
+                        timerDisplay.style.color = '#ff0000';
+                        timerDisplay.style.textShadow = '0 0 10px #ff0000, 0 0 20px #ff0000';
+                    }
+                }
+            }
+            
+            function generateTargetDigit() {
+                let newDigit = Math.floor(Math.random() * 10);
+                if (newDigit==9){
+                    newDigit=7;
+                }
+                currentTargetDigit = newDigit;
+                if (targetDigitDisplay) targetDigitDisplay.textContent = newDigit;
+                clearCanvas();
+                if (predictionDisplay) predictionDisplay.textContent = '?';
+                if (matchStatus) {
+                    matchStatus.textContent = 'WAITING';
+                    matchStatus.style.color = '#ff3333';
+                }
+            }
+            
+            function startDrawing(e) {
+                if (!gameActive || !canvas) return;
+                
+                isDrawing = true;
+                
+                const rect = canvas.getBoundingClientRect();
+                lastX = e.clientX - rect.left;
+                lastY = e.clientY - rect.top;
+            }
+            
+            function draw(e) {
+                if (!isDrawing || !gameActive || !ctx || !canvas) return;
+                
+                const rect = canvas.getBoundingClientRect();
+                const currentX = e.clientX - rect.left;
+                const currentY = e.clientY - rect.top;
+                
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(currentX, currentY);
+                ctx.stroke();
+                
+                lastX = currentX;
+                lastY = currentY;
+                
+                updateMnistPreview();
+            }
+            
+            function stopDrawing() {
+                if (!isDrawing || !gameActive) return;
+                
+                isDrawing = false;
+                if (ctx) ctx.beginPath();
+                predict();
+            }
+            
+            function handleTouch(e) {
+                if (!e || !gameActive || !canvas) return;
+                
+                e.preventDefault();
+                
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                if (!touch) return;
+                
+                const currentX = touch.clientX - rect.left;
+                const currentY = touch.clientY - rect.top;
+                
+                if (e.type === 'touchstart') {
+                    isDrawing = true;
+                    lastX = currentX;
+                    lastY = currentY;
+                } else if (isDrawing && ctx) {
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(currentX, currentY);
+                    ctx.stroke();
+                    
+                    lastX = currentX;
+                    lastY = currentY;
+                    
+                    updateMnistPreview();
+                }
+            }
+            
+            function updateMnistPreview() {
+                if (!mnistCtx || !canvas) return;
+                
+                mnistCtx.clearRect(0, 0, mnistPreview.width, mnistPreview.height);
+                mnistCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 28, 28);
+            }
+            
+            function clearCanvas() {
+                if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if (mnistCtx) mnistCtx.clearRect(0, 0, mnistPreview.width, mnistPreview.height);
+            }
+            
+            async function predict() {
+                if (!mnistPreview || !predictionDisplay) return;
+                
+                try {
+                    // Convert canvas to blob for sending to server
+                    const blob = await new Promise(resolve => mnistPreview.toBlob(resolve, 'image/png'));
+                    if (!blob) {
+                        throw new Error('Failed to create image blob');
+                    }
+                    
+                    const formData = new FormData();
+                    formData.append("img_param", blob, "toPred.png");
+                    
+                    // Send to the server for prediction
+                    const response = await fetch("/mnist", {
+                        method: "POST",
+                        body: formData,
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    handlePredictionResult(result);
+                    
+                } catch (error) {
+                    console.error("Error during prediction:", error);
+                    if (predictionDisplay) predictionDisplay.textContent = "ERR";
+                    // Fall back to simulation in case of error
+                    simulatePredictionResponse();
+                }
+            }
+            
+            function handlePredictionResult(result) {
+                if (!result || !result.pred_Digit) {
+                    console.error("Invalid prediction result:", result);
+                    simulatePredictionResponse(); // Fall back to simulation
+                    return;
+                }
+                
+                // Got valid prediction from server
+                const predictedDigit = parseInt(result.pred_Digit, 10);
+                updateGameWithPrediction(predictedDigit);
+            }
+            
+            function simulatePredictionResponse() {
+                if (!mnistCtx) return;
+                
+                // Count non-black pixels to see if anything was drawn
+                const imageData = mnistCtx.getImageData(0, 0, 28, 28);
+                let nonBlackPixels = 0;
+                for (let i = 0; i < imageData.data.length; i += 4) {
+                    if (imageData.data[i] > 0) {
+                        nonBlackPixels++;
+                    }
+                }
+                
+                if (nonBlackPixels < 10) {
+                    // Not enough drawn
+                    if (predictionDisplay) predictionDisplay.textContent = "?";
+                    if (matchStatus) matchStatus.textContent = "DRAW!";
+                    return;
+                }
+                
+                // Get a random digit as prediction with higher chance of being correct
+                let predictedDigit;
+                const randomValue = Math.random();
+                if (randomValue < 0.7) {
+                    // 70% chance of correct prediction
+                    predictedDigit = currentTargetDigit;
+                } else {
+                    // 30% chance of a different random digit
+                    let incorrectDigit;
+                    do {
+                        incorrectDigit = Math.floor(Math.random() * 10);
+                    } while (incorrectDigit === currentTargetDigit);
+                    predictedDigit = incorrectDigit;
+                }
+                
+                updateGameWithPrediction(predictedDigit);
+            }
+            
+            function updateGameWithPrediction(predictedDigit) {
+                if (!predictionDisplay) return;
+                
+                // Update UI with result
+                predictionDisplay.textContent = predictedDigit;
+                totalAttempts++;
+                
+                if (predictedDigit === currentTargetDigit) {
+                    // Correct match
+                    currentScore++;
+                    correctAttempts++;
+                    if (scoreDisplay) scoreDisplay.textContent = currentScore;
+                    if (matchStatus) {
+                        matchStatus.textContent = "MATCH!";
+                        matchStatus.style.color = "#00ff00";
+                    }
+                    if (gameStatus) gameStatus.textContent = "Correct! Keep going!";
+                    
+                    // Generate new target digit with longer timeout
+                    setTimeout(generateTargetDigit, 500);
+                } else {
+                    // Incorrect match
+                    if (matchStatus) {
+                        matchStatus.textContent = "FAIL!";
+                        matchStatus.style.color = "#ff0000";
+                    }
+                    if (gameStatus) gameStatus.textContent = "Try again!";
+                    
+                    // Clear canvas to try again with the same target
+                    setTimeout(clearCanvas, 500);
+                }
+            }
+            
+            function ensureNoAnimationInterference() {
+                // Force all pseudo-elements to not interfere with pointer events
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    body::before, .game-area::before, .game-area::after, 
+                    .sidebar::before, header::after {
+                        pointer-events: none !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        });
+
+    </script> 
+    </body>
+</html>

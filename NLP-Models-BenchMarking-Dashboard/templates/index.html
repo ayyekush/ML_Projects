@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NLP Dashboard</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
+  <style>
+
+  </style>
+</head>
+<body>
+  <div id="particles-container" class="particles-js"></div>
+  
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <header class="header-wrapper glass mb-8">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 glow-text">
+          <span class="typed-text">NLP Model BenchMarking Dashboard</span>
+        </h1>
+        <p class="text-xl text-blue-200 leading-relaxed">
+          Comparing ML models on real-world text data with 
+          <span class="font-semibold text-purple-300">advanced sentiment analysis</span>
+        </p>
+        
+        <!-- Social Links -->
+        <div class="mt-4 flex justify-center space-x-4">
+          <a href="https://www.linkedin.com/in/kushagra-agrawal-7b0a1530a/" target="_blank" class="social-btn tooltip">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+            <span class="tooltiptext">LinkedIn Profile</span>
+          </a>
+          <a href="https://github.com/ayyekush/" target="_blank" class="social-btn tooltip">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg>
+            <span class="tooltiptext">GitHub Repository</span>
+          </a>
+          <button id="infoBtn" class="social-btn tooltip">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="tooltiptext">About NLP Techniques</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Left Column -->
+      <div class="lg:col-span-5">
+        <!-- Model Selection Section -->
+        <div class="glass p-6 mb-8 glow-on-hover scale-in">
+          <h2 class="text-2xl font-semibold mb-4 flex items-center">
+            <span class="inline-block w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
+            Model Selection
+          </h2>
+          
+          <!-- Vectorization Method -->
+          <div class="mb-6">
+            <h3 class="text-lg font-medium mb-3 text-blue-200">Vectorization Method</h3>
+            <div class="flex space-x-4">
+              <button id="tfidfBtn" class="outline-btn px-6 py-3 rounded-lg font-medium selected">
+                TF-IDF
+              </button>
+              <button id="bowBtn" class="outline-btn px-6 py-3 rounded-lg font-medium">
+                Bag of Words
+              </button>
+            </div>
+          </div>
+          
+          <!-- Model Type -->
+          <div>
+            <h3 class="text-lg font-medium mb-3 text-blue-200">Model Type</h3>
+            <select id="modelSelect" class="custom-select w-full rounded-lg p-3">
+              <option value="lr">Logistic Regression</option>
+              <option value="nb_multi">Multinomial Naive Bayes</option>
+              <option value="nb_bern">Bernoulli Naive Bayes</option>
+              <option value="nb_gauss">Gaussian Naive Bayes</option>
+              <option value="svm">Support Vector Classifier</option>
+              <option value="ann">Artificial Neural Network</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="glass p-6 mb-8 glow-on-hover scale-in">
+          <h2 class="text-2xl font-semibold mb-4 flex items-center">
+            <span class="inline-block w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
+            Kindle Review Input For Test
+          </h2>
+          <textarea id="reviewInput" class="custom-textarea w-full rounded-lg p-4 min-h-32 mb-4" 
+            placeholder="Paste a Kindle review here to analyze its sentiment..."></textarea>
+          <div class="flex justify-end">
+            <button id="analyzeBtn" class="gradient-btn px-6 py-3 rounded-lg font-medium flex items-center">
+              <span id="analyzeBtnText">Analyze Review</span>
+              <svg id="analyzeBtnIcon" class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Prediction Result -->
+        <div id="resultSection" class="glass p-6 mb-8 glow-on-hover result-wrapper">
+          <h2 class="text-2xl font-semibold mb-4 flex items-center">
+            <span class="inline-block w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
+            Prediction Result
+          </h2>
+          <div class="flex items-center mb-6">
+            <div class="mr-4">
+              <span class="text-lg font-medium text-blue-200">Sentiment:</span>
+            </div>
+            <div id="sentimentResult" class="sentiment-badge text-xl font-bold px-4 py-2 rounded-lg bg-green-500 text-white pulse">
+              Positive
+            </div>
+          </div>
+          
+          <!-- Confidence Chart -->
+          <div>
+            <h3 class="text-lg font-medium mb-3 text-blue-200">Prediction Confidence</h3>
+            <div class="h-48 bg-slate-800 bg-opacity-50 rounded-lg p-4">
+              <canvas id="confidenceChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column (Model Comparison - Expanded) -->
+      <div class="lg:col-span-7">
+        <!-- Model Comparison Table -->
+        <div class="glass p-6 glow-on-hover scale-in">
+          <h2 class="text-2xl font-semibold mb-4 flex items-center">
+            <span class="inline-block w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
+            Model Performance Comparison
+          </h2>
+          
+          <!-- Comparison Tabs -->
+          <div class="mb-6 flex space-x-4">
+            <button id="accuracyTabBtn" class="outline-btn px-4 py-2 rounded-lg font-medium selected">
+              Accuracy
+            </button>
+            <button id="f1TabBtn" class="outline-btn px-4 py-2 rounded-lg font-medium">
+              F1 Score
+            </button>
+            <button id="cmTabBtn" class="outline-btn px-4 py-2 rounded-lg font-medium">
+              Confusion Matrix
+            </button>
+          </div>
+          
+          <!-- Accuracy Tab -->
+          <div id="accuracyTab" class="tab-content block">
+            <div class="mb-6">
+              <h3 class="text-lg font-medium mb-3 text-blue-200">Accuracy Comparison</h3>
+              <div class="h-64 bg-slate-800 bg-opacity-50 rounded-lg p-4">
+                <canvas id="accuracyChart"></canvas>
+              </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+              <table class="comparison-table w-full table-auto border-collapse">
+                <thead>
+                  <tr>
+                    <th class="px-4 py-2 text-left">Model</th>
+                    <th class="px-4 py-2 text-left">BoW Accuracy</th>
+                    <th class="px-4 py-2 text-left">TF-IDF Accuracy</th>
+                    <th class="px-4 py-2 text-left">Difference</th>
+                  </tr>
+                </thead>
+                <tbody id="accuracyTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- F1 Score Tab -->
+          <div id="f1Tab" class="tab-content hidden">
+            <div class="mb-6">
+              <h3 class="text-lg font-medium mb-3 text-blue-200">F1 Score Comparison</h3>
+              <div class="h-64 bg-slate-800 bg-opacity-50 rounded-lg p-4">
+                <canvas id="f1Chart"></canvas>
+              </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+              <table class="comparison-table w-full table-auto border-collapse">
+                <thead>
+                  <tr>
+                    <th class="px-4 py-2 text-left">Model</th>
+                    <th class="px-4 py-2 text-left">BoW F1 Score</th>
+                    <th class="px-4 py-2 text-left">TF-IDF F1 Score</th>
+                    <th class="px-4 py-2 text-left">Difference</th>
+                  </tr>
+                </thead>
+                <tbody id="f1TableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Confusion Matrix Tab -->
+          <div id="cmTab" class="tab-content hidden">
+            <div class="mb-4">
+              <h3 class="text-lg font-medium mb-3 text-blue-200" id="cmTitle">Confusion Matrix: Logistic Regression (TF-IDF)</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- CM Visualization -->
+              <div class="glass p-4 rounded-lg">
+                <div class="text-center mb-2 text-sm text-blue-200">Confusion Matrix</div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                  <div class="cm-cell cm-header"></div>
+                  <div class="cm-cell cm-header">Predicted Pos</div>
+                  <div class="cm-cell cm-header">Predicted Neg</div>
+                  <div class="cm-cell cm-header">Actual Pos</div>
+                  <div class="cm-cell cm-tp" id="cm-tp">549</div>
+                  <div class="cm-cell cm-fp" id="cm-fp">282</div>
+                  <div class="cm-cell cm-header">Actual Neg</div>
+                  <div class="cm-cell cm-fn" id="cm-fn">116</div>
+                  <div class="cm-cell cm-tn" id="cm-tn">1453</div>
+                </div>
+              </div>
+              
+              <!-- CM Metrics -->
+              <div class="glass p-4 rounded-lg">
+                <div class="text-center mb-2 text-sm text-blue-200">Performance Metrics</div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <p class="text-gray-400">Precision</p>
+                    <p class="text-xl font-semibold" id="precision">0.825</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-400">Recall</p>
+                    <p class="text-xl font-semibold" id="recall">0.661</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-400">F1 Score</p>
+                    <p class="text-xl font-semibold" id="f1-score">0.734</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-400">Accuracy</p>
+                    <p class="text-xl font-semibold" id="accuracy">0.834</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Model Info -->
+          <div class="mt-6">
+            <div id="modelInfoCard" class="glass p-4 rounded-lg hover:glow-border transition-all">
+              <h3 class="font-semibold text-purple-300">About Selected Model</h3>
+              <p class="text-sm text-gray-300 mt-2">
+                Logistic Regression is a statistical model that uses a logistic function to model a binary dependent variable. 
+                It's widely used for binary classification problems due to its interpretability and efficiency.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Info Modal -->
+  <div id="infoModal" class="info-modal">
+    <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"></div>
+    <div class="glass p-6 rounded-lg max-w-3xl w-full mx-auto my-20 relative z-10 scale-in overflow-y-auto max-h-[80vh]">
+      <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-blue-200">NLP Techniques & Model Comparison</h2>
+            <button id="closeInfoBtn" class="text-gray-400 hover:text-white transition">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="space-y-6 text-gray-300">
+            <div>
+              <h3 class="text-xl font-medium text-purple-300 mb-2">About This Tool</h3>
+              <p>
+                This NLP Model Comparator demonstrates how different machine learning approaches perform on sentiment analysis 
+                tasks using real-world text data. It allows you to compare various models' performance metrics and see them
+                analyze text in real-time.
+              </p>
+            </div>
+            
+            <div>
+              <h3 class="text-xl font-medium text-purple-300 mb-2">Text Vectorization Methods</h3>
+              <div class="pl-4 border-l-2 border-purple-500">
+                <h4 class="text-lg font-medium text-blue-200">Bag of Words (BoW)</h4>
+                <p class="mb-3">
+                  A simple approach that counts word frequency in documents, disregarding grammar and word order. 
+                  It creates a vocabulary of all unique words and represents documents as sparse vectors.
+                </p>
+                
+                <h4 class="text-lg font-medium text-blue-200">TF-IDF (Term Frequency-Inverse Document Frequency)</h4>
+                <p>
+                  A statistical measure that evaluates how relevant a word is to a document in a collection.
+                  It weights terms by their frequency in a document and their rarity across all documents,
+                  helping to filter out common words.
+                </p>
+              </div>
+            </div>
+            
+            <div>
+              <h3 class="text-xl font-medium text-purple-300 mb-2">Machine Learning Models</h3>
+              <div class="pl-4 border-l-2 border-purple-500">
+                <h4 class="text-lg font-medium text-blue-200">Logistic Regression</h4>
+                <p class="mb-3">
+                  A statistical model that uses a logistic function to model binary outcomes.
+                  It's effective for text classification due to its simplicity and interpretability.
+                </p>
+                
+                <h4 class="text-lg font-medium text-blue-200">Naive Bayes Classifiers</h4>
+                <p class="mb-3">
+                  Probabilistic classifiers based on Bayes' theorem with strong independence assumptions:
+                  <ul class="list-disc pl-5 mt-2">
+                    <li><span class="text-blue-200">Multinomial NB</span>: Designed for discrete features (word counts)</li>
+                    <li><span class="text-blue-200">Bernoulli NB</span>: Designed for binary features (word presence/absence)</li>
+                    <li><span class="text-blue-200">Gaussian NB</span>: Assumes features follow a normal distribution</li>
+                  </ul>
+                </p>
+                
+                <h4 class="text-lg font-medium text-blue-200">Support Vector Machines (SVM)</h4>
+                <p class="mb-3">
+                  Creates a hyperplane that maximally separates data points of different classes.
+                  Effective in high-dimensional spaces like text data.
+                </p>
+                
+                <h4 class="text-lg font-medium text-blue-200">Artificial Neural Networks (ANN)</h4>
+                <p>
+                  Machine learning models inspired by the human brain's structure.
+                  For text data, they can capture complex patterns and relationships between words.
+                </p>
+              </div>
+            </div>
+            
+            <div>
+              <h3 class="text-xl font-medium text-purple-300 mb-2">Performance Metrics</h3>
+              <div class="pl-4 border-l-2 border-purple-500">
+                <h4 class="text-lg font-medium text-blue-200">Accuracy</h4>
+                <p class="mb-3">
+                  The ratio of correctly predicted observations to the total observations.
+                  Formula: (TP + TN) / (TP + TN + FP + FN)
+                </p>
+                
+                <h4 class="text-lg font-medium text-blue-200">Precision</h4>
+                <p class="mb-3">
+                  The ratio of correctly predicted positive observations to the total predicted positives.
+                  Formula: TP / (TP + FP)
+                </p>
+                
+                <h4 class="text-lg font-medium text-blue-200">Recall</h4>
+                <p class="mb-3">
+                  The ratio of correctly predicted positive observations to all actual positives.
+                  Formula: TP / (TP + FN)
+                </p>
+                
+                <h4 class="text-lg font-medium text-blue-200">F1 Score</h4>
+                <p class="mb-3">
+                  The weighted average of Precision and Recall.
+                  Formula: 2 * (Precision * Recall) / (Precision + Recall)
+                </p>
+                
+                <h4 class="text-lg font-medium text-blue-200">Confusion Matrix</h4>
+                <p>
+                  A table that describes the performance of a classification model by showing the counts of:
+                  <ul class="list-disc pl-5 mt-2">
+                    <li><span class="text-blue-200">True Positives (TP)</span>: Correctly predicted positive class</li>
+                    <li><span class="text-blue-200">False Positives (FP)</span>: Incorrectly predicted positive class</li>
+                    <li><span class="text-blue-200">False Negatives (FN)</span>: Incorrectly predicted negative class</li>
+                    <li><span class="text-blue-200">True Negatives (TN)</span>: Correctly predicted negative class</li>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <script>
+        // Particles.js initialization
+        document.addEventListener('DOMContentLoaded', function() {
+          window.particlesJS.load('particles-container', {
+            "particles": {
+              "number": {
+                "value": 80,
+                "density": {
+                  "enable": true,
+                  "value_area": 800
+                }
+              },
+              "color": {
+                "value": "#4f46e5"
+              },
+              "shape": {
+                "type": "circle",
+                "stroke": {
+                  "width": 0,
+                  "color": "#000000"
+                },
+              },
+              "opacity": {
+                "value": 0.3,
+                "random": true,
+                "anim": {
+                  "enable": true,
+                  "speed": 1,
+                  "opacity_min": 0.1,
+                  "sync": false
+                }
+              },
+              "size": {
+                "value": 3,
+                "random": true,
+                "anim": {
+                  "enable": true,
+                  "speed": 2,
+                  "size_min": 0.1,
+                  "sync": false
+                }
+              },
+              "line_linked": {
+                "enable": true,
+                "distance": 150,
+                "color": "#4f46e5",
+                "opacity": 0.2,
+                "width": 1
+              },
+              "move": {
+                "enable": true,
+                "speed": 1,
+                "direction": "none",
+                "random": true,
+                "straight": false,
+                "out_mode": "out",
+                "bounce": false,
+                "attract": {
+                  "enable": true,
+                  "rotateX": 600,
+                  "rotateY": 1200
+                }
+              }
+            },
+            "interactivity": {
+              "detect_on": "canvas",
+              "events": {
+                "onhover": {
+                  "enable": true,
+                  "mode": "bubble"
+                },
+                "onclick": {
+                  "enable": true,
+                  "mode": "push"
+                },
+                "resize": true
+              },
+              "modes": {
+                "grab": {
+                  "distance": 140,
+                  "line_linked": {
+                    "opacity": 1
+                  }
+                },
+                "bubble": {
+                  "distance": 200,
+                  "size": 5,
+                  "duration": 2,
+                  "opacity": 0.8,
+                  "speed": 3
+                },
+                "repulse": {
+                  "distance": 200,
+                  "duration": 0.4
+                },
+                "push": {
+                  "particles_nb": 4
+                },
+                "remove": {
+                  "particles_nb": 2
+                }
+              }
+            },
+            "retina_detect": true
+          });
+        });
+        
+        // Model data
+        const modelData = {
+          metrics: {
+            bow: {
+              lr: { 
+                accuracy: 0.8317, 
+                f1: calculateF1FromCM(597, 234, 170, 1399),
+                cm: [[597, 234], [170, 1399]] 
+              },
+              svm: { 
+                accuracy: 0.7895, 
+                f1: calculateF1FromCM(535, 296,209, 1360),
+                cm: [[ 535,296],[ 209,1360]]
+              },
+              nb_multi: { 
+                accuracy: 0.8208, 
+                f1: calculateF1FromCM(571, 170, 260, 1399),
+                cm: [[571, 170], [260, 1399]] 
+              },
+              nb_bern: { 
+                accuracy: 0.7858, 
+                f1: calculateF1FromCM(401, 84, 430, 1485),
+                cm: [[401, 84], [430, 1485]] 
+              },
+              nb_gauss: { 
+                accuracy: 0.5858, 
+                f1: calculateF1FromCM(552, 715, 279, 854),
+                cm: [[552, 715], [279, 854]] 
+              },
+              ann: { 
+                accuracy: 0.8167, 
+                f1: calculateF1FromCM(553, 278, 162, 1407),
+                cm: [[553, 278], [162, 1407]] 
+              }
+            },
+            tfidf: {
+              lr: { 
+                accuracy: 0.8342, 
+                f1: calculateF1FromCM(549, 282, 116, 1453),
+                cm: [[549, 282], [116, 1453]] 
+              },
+              svm: { 
+                accuracy:  0.8220, 
+                f1: calculateF1FromCM(554,277,150,1419),
+                cm: [[ 554 ,277],[ 150, 1419]] 
+              },
+              nb_multi: { 
+                accuracy: 0.6808, 
+                f1: calculateF1FromCM(68, 3, 763, 1566),
+                cm: [[68, 3], [763, 1566]] 
+              },
+              nb_bern: { 
+                accuracy: 0.7858, 
+                f1: calculateF1FromCM(401, 84, 430, 1485),
+                cm: [[401, 84], [430, 1485]] 
+              },
+              nb_gauss: { 
+                accuracy: 0.5875, 
+                f1: calculateF1FromCM(538, 697, 293, 872),
+                cm: [[538, 697], [293, 872]] 
+              },
+              ann: { 
+                accuracy: 0.8021, 
+                f1: calculateF1FromCM(575, 256, 219, 1350),
+                cm: [[575, 256], [219, 1350]] 
+              }
+            }
+          },
+          descriptions: {
+            lr: "Logistic Regression is a statistical model that uses a logistic function to model a binary dependent variable. It's widely used for binary classification problems due to its interpretability and efficiency.",
+            svm: "Support Vector Machines (SVM) are powerful classification algorithms that find the hyperplane that best separates classes with the maximum margin. They excel at text classification in high-dimensional spaces.",
+            nb_multi: "Multinomial Naive Bayes is a specialized version of Naive Bayes designed for text classification where features represent word counts. It's particularly effective for document classification tasks.",
+            nb_bern: "Bernoulli Naive Bayes is specialized for binary features like word presence/absence rather than counts. It's useful when dealing with short texts or when the occurrence rather than frequency is important.",
+            nb_gauss: "Gaussian Naive Bayes assumes features follow a normal distribution. While less common for text data (which is usually discrete), it can be used when features are continuous.",
+            ann: "Artificial Neural Networks can learn complex patterns in text data through interconnected layers of nodes. They are flexible but may require more data and computational resources than other models."
+          }
+        };
+    
+        // Function to calculate F1 score from confusion matrix values
+        function calculateF1FromCM(tp, fp, fn, tn) {
+          const precision = tp / (tp + fp) || 0;
+          const recall = tp / (tp + fn) || 0;
+          return 2 * (precision * recall) / (precision + recall) || 0;
+        }
+    
+        // Function to calculate metrics from confusion matrix values
+        function calculateMetrics(tp, fp, fn, tn) {
+          const precision = tp / (tp + fp) || 0;
+          const recall = tp / (tp + fn) || 0;
+          const f1 = 2 * (precision * recall) / (precision + recall) || 0;
+          const accuracy = (tp + tn) / (tp + tn + fp + fn) || 0;
+          
+          return {
+            precision: precision.toFixed(3),
+            recall: recall.toFixed(3),
+            f1: f1.toFixed(3),
+            accuracy: accuracy.toFixed(3)
+          };
+        }
+    
+        // Variables to track current state
+        let currentVectorizer = 'tfidf'; // 'tfidf' or 'bow'
+        let currentModel = 'lr'; // Default model
+        let currentTab = 'accuracyTab'; // Default tab
+        
+        // DOM Element References
+        const tfidfBtn = document.getElementById('tfidfBtn');
+        const bowBtn = document.getElementById('bowBtn');
+        const modelSelect = document.getElementById('modelSelect');
+        const accuracyTabBtn = document.getElementById('accuracyTabBtn');
+        const f1TabBtn = document.getElementById('f1TabBtn');
+        const cmTabBtn = document.getElementById('cmTabBtn');
+        const accuracyTab = document.getElementById('accuracyTab');
+        const f1Tab = document.getElementById('f1Tab');
+        const cmTab = document.getElementById('cmTab');
+        const modelInfoCard = document.getElementById('modelInfoCard');
+        const reviewInput = document.getElementById('reviewInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resultSection = document.getElementById('resultSection');
+        const sentimentResult = document.getElementById('sentimentResult');
+        const infoBtn = document.getElementById('infoBtn');
+        const infoModal = document.getElementById('infoModal');
+        const closeInfoBtn = document.getElementById('closeInfoBtn');
+        
+        // Chart references
+        let accuracyChart = null;
+        let f1Chart = null;
+        let confidenceChart = null;
+        
+        // Initialize charts
+        function initializeCharts() {
+          // Accuracy Chart
+          const accuracyCtx = document.getElementById('accuracyChart').getContext('2d');
+          accuracyChart = new Chart(accuracyCtx, {
+            type: 'bar',
+            data: {
+              labels: ['Logistic Regression', 'SVM', 'Multinomial NB', 'Bernoulli NB', 'Gaussian NB', 'ANN'],
+              datasets: [
+                {
+                  label: 'BoW',
+                  data: [
+                    modelData.metrics.bow.lr.accuracy,
+                    modelData.metrics.bow.svm.accuracy,
+                    modelData.metrics.bow.nb_multi.accuracy,
+                    modelData.metrics.bow.nb_bern.accuracy,
+                    modelData.metrics.bow.nb_gauss.accuracy,
+                    modelData.metrics.bow.ann.accuracy
+                  ],
+                  backgroundColor: 'rgba(79, 70, 229, 0.7)',
+                  borderColor: 'rgba(79, 70, 229, 1)',
+                  borderWidth: 1
+                },
+                {
+                  label: 'TF-IDF',
+                  data: [
+                    modelData.metrics.tfidf.lr.accuracy,
+                    modelData.metrics.tfidf.svm.accuracy,
+                    modelData.metrics.tfidf.nb_multi.accuracy,
+                    modelData.metrics.tfidf.nb_bern.accuracy,
+                    modelData.metrics.tfidf.nb_gauss.accuracy,
+                    modelData.metrics.tfidf.ann.accuracy
+                  ],
+                  backgroundColor: 'rgba(139, 92, 246, 0.7)',
+                  borderColor: 'rgba(139, 92, 246, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 1,
+                  ticks: {
+                    color: 'rgba(248, 250, 252, 0.7)'
+                  },
+                  grid: {
+                    color: 'rgba(148, 163, 184, 0.1)'
+                  }
+                },
+                x: {
+                  ticks: {
+                    color: 'rgba(248, 250, 252, 0.7)'
+                  },
+                  grid: {
+                    color: 'rgba(148, 163, 184, 0.1)'
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    color: 'rgba(248, 250, 252, 0.7)'
+                  }
+                }
+              }
+            }
+          });
+          
+          // F1 Score Chart
+          const f1Ctx = document.getElementById('f1Chart').getContext('2d');
+          f1Chart = new Chart(f1Ctx, {
+            type: 'bar',
+            data: {
+              labels: ['Logistic Regression', 'SVM', 'Multinomial NB', 'Bernoulli NB', 'Gaussian NB', 'ANN'],
+              datasets: [
+                {
+                  label: 'BoW',
+                  data: [
+                    modelData.metrics.bow.lr.f1,
+                    modelData.metrics.bow.svm.f1,
+                    modelData.metrics.bow.nb_multi.f1,
+                    modelData.metrics.bow.nb_bern.f1,
+                    modelData.metrics.bow.nb_gauss.f1,
+                    modelData.metrics.bow.ann.f1
+                  ],
+                  backgroundColor: 'rgba(79, 70, 229, 0.7)',
+                  borderColor: 'rgba(79, 70, 229, 1)',
+                  borderWidth: 1
+                },
+                {
+                  label: 'TF-IDF',
+                  data: [
+                    modelData.metrics.tfidf.lr.f1,
+                    modelData.metrics.tfidf.svm.f1,
+                    modelData.metrics.tfidf.nb_multi.f1,
+                    modelData.metrics.tfidf.nb_bern.f1,
+                    modelData.metrics.tfidf.nb_gauss.f1,
+                    modelData.metrics.tfidf.ann.f1
+                  ],
+                  backgroundColor: 'rgba(139, 92, 246, 0.7)',
+                  borderColor: 'rgba(139, 92, 246, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 1,
+                  ticks: {
+                    color: 'rgba(248, 250, 252, 0.7)'
+                  },
+                  grid: {
+                    color: 'rgba(148, 163, 184, 0.1)'
+                  }
+                },
+                x: {
+                  ticks: {
+                    color: 'rgba(248, 250, 252, 0.7)'
+                  },
+                  grid: {
+                    color: 'rgba(148, 163, 184, 0.1)'
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    color: 'rgba(248, 250, 252, 0.7)'
+                  }
+                }
+              }
+            }
+          });
+          
+          // Confidence Chart (initially hidden)
+          const confidenceCtx = document.getElementById('confidenceChart').getContext('2d');
+          confidenceChart = new Chart(confidenceCtx, {
+            type: 'doughnut',
+            data: {
+              labels: ['Positive', 'Negative'],
+              datasets: [{
+                data: [0.85, 0.15],
+                backgroundColor: [
+                  'rgba(16, 185, 129, 0.7)',
+                  'rgba(239, 68, 68, 0.7)'
+                ],
+                borderColor: [
+                  'rgba(16, 185, 129, 1)',
+                  'rgba(239, 68, 68, 1)'
+                ],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: {
+                    color: 'rgba(248, 250, 252, 0.7)'
+                  }
+                }
+              }
+            }
+          });
+        }
+        
+        // Initialize Tables
+        function initializeTables() {
+          const accuracyTableBody = document.getElementById('accuracyTableBody');
+          const f1TableBody = document.getElementById('f1TableBody');
+          
+          const models = [
+            { id: 'lr', name: 'Logistic Regression' },
+            { id: 'svm', name: 'SVM' },
+            { id: 'nb_multi', name: 'Multinomial NB' },
+            { id: 'nb_bern', name: 'Bernoulli NB' },
+            { id: 'nb_gauss', name: 'Gaussian NB' },
+            { id: 'ann', name: 'ANN' }
+          ];
+          
+          // Clear existing rows
+          accuracyTableBody.innerHTML = '';
+          f1TableBody.innerHTML = '';
+          
+          // Populate accuracy table
+          models.forEach(model => {
+            const bowAcc = modelData.metrics.bow[model.id].accuracy;
+            const tfidfAcc = modelData.metrics.tfidf[model.id].accuracy;
+            const diff = (tfidfAcc - bowAcc).toFixed(4);
+            
+            const row = document.createElement('tr');
+            row.id = `acc-row-${model.id}`;
+            row.innerHTML = `
+              <td class="px-4 py-2">${model.name}</td>
+              <td class="px-4 py-2">${bowAcc.toFixed(4)}</td>
+              <td class="px-4 py-2">${tfidfAcc.toFixed(4)}</td>
+              <td class="px-4 py-2 ${diff > 0 ? 'text-green-400' : diff < 0 ? 'text-red-400' : ''}">${diff > 0 ? '+' : ''}${diff}</td>
+            `;
+            
+            accuracyTableBody.appendChild(row);
+          });
+          
+          // Populate F1 score table
+          models.forEach(model => {
+            const bowF1 = modelData.metrics.bow[model.id].f1;
+            const tfidfF1 = modelData.metrics.tfidf[model.id].f1;
+            const diff = (tfidfF1 - bowF1).toFixed(4);
+            
+            const row = document.createElement('tr');
+            row.id = `f1-row-${model.id}`;
+            row.innerHTML = `
+              <td class="px-4 py-2">${model.name}</td>
+              <td class="px-4 py-2">${bowF1.toFixed(4)}</td>
+              <td class="px-4 py-2">${tfidfF1.toFixed(4)}</td>
+              <td class="px-4 py-2 ${diff > 0 ? 'text-green-400' : diff < 0 ? 'text-red-400' : ''}">${diff > 0 ? '+' : ''}${diff}</td>
+            `;
+            
+            f1TableBody.appendChild(row);
+          });
+        }
+        
+        // Update Confusion Matrix display
+        function updateConfusionMatrix() {
+          const cm = modelData.metrics[currentVectorizer][currentModel].cm;
+          const tp = cm[0][0];
+          const fp = cm[0][1];
+          const fn = cm[1][0];
+          const tn = cm[1][1];
+          
+          // Update confusion matrix cells
+          document.getElementById('cm-tp').innerText = tp;
+          document.getElementById('cm-fp').innerText = fp;
+          document.getElementById('cm-fn').innerText = fn;
+          document.getElementById('cm-tn').innerText = tn;
+          
+          // Calculate and update metrics
+          const metrics = calculateMetrics(tp, fp, fn, tn);
+          document.getElementById('precision').innerText = metrics.precision;
+          document.getElementById('recall').innerText = metrics.recall;
+          document.getElementById('f1-score').innerText = metrics.f1;
+          document.getElementById('accuracy').innerText = metrics.accuracy;
+          
+          // Update title
+          const modelNames = {
+            lr: 'Logistic Regression',
+            svm: 'SVM',
+            nb_multi: 'Multinomial NB',
+            nb_bern: 'Bernoulli NB',
+            nb_gauss: 'Gaussian NB',
+            ann: 'ANN'
+          };
+          
+          document.getElementById('cmTitle').innerText = `Confusion Matrix: ${modelNames[currentModel]} (${currentVectorizer === 'tfidf' ? 'TF-IDF' : 'BoW'})`;
+        }
+        
+        // Update model information card
+        function updateModelInfo() {
+          modelInfoCard.querySelector('p').innerText = modelData.descriptions[currentModel];
+        }
+        
+        // Highlight selected model in tables
+        function highlightSelectedModel() {
+          // Remove all highlights first
+          document.querySelectorAll('.highlighted').forEach(el => {
+            el.classList.remove('highlighted');
+          });
+          
+          // Add highlight to selected model
+          const accRow = document.getElementById(`acc-row-${currentModel}`);
+          const f1Row = document.getElementById(`f1-row-${currentModel}`);
+          
+          if (accRow) accRow.classList.add('highlighted');
+          if (f1Row) f1Row.classList.add('highlighted');
+        }
+        
+        // Simulate analysis of review
+        function analyzeReview() {
+          // Show loading state
+          const analyzeBtnText = document.getElementById('analyzeBtnText');
+          const analyzeBtnIcon = document.getElementById('analyzeBtnIcon');
+          
+          analyzeBtnText.innerText = 'Analyzing...';
+          analyzeBtnIcon.classList.add('animate-spin');
+          
+            // Get the text and perform dummy sentiment analysis
+          const text = reviewInput.value.trim();
+            
+          if (text.length < 10) {
+            alert('Please enter a more substantial review for analysis.');
+            analyzeBtnText.innerText = 'Analyze Review';
+            analyzeBtnIcon.classList.remove('animate-spin');
+            return;
+          }
+          fetch("./predict-single-review",{
+                method:"POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                    },
+                body: JSON.stringify({
+                    text: text,
+                    vectorizer:currentVectorizer,
+                    model:currentModel
+                })
+            }).
+            then((result)=>result.json())
+            .then((result)=>{
+                posProbability=result.confidence;
+                negProbability=1-posProbability;
+                // Update confidence chart
+                confidenceChart.data.datasets[0].data = [posProbability, negProbability];
+                confidenceChart.update();
+                
+                // Update sentiment result
+                const isPositive = posProbability>0.5;
+                sentimentResult.innerText=isPositive ? 'Positive' : 'Negative';
+                sentimentResult.className=sentimentResult.className.replace(/bg-\w+-\d+/, isPositive ? 'bg-green-500' : 'bg-red-500');
+                
+                // Show result section
+                resultSection.classList.add('visible');
+                
+                // Reset button
+                analyzeBtnText.innerText = 'Analyze Review';
+                analyzeBtnIcon.classList.remove('animate-spin');
+                
+            })
+        }
+            // Event Handlers
+        function handleVectorizerChange(vectorizer) {
+          currentVectorizer = vectorizer;
+          
+          // Update UI for buttons
+          if (vectorizer === 'tfidf') {
+            tfidfBtn.classList.add('selected');
+            bowBtn.classList.remove('selected');
+          } else {
+            bowBtn.classList.add('selected');
+            tfidfBtn.classList.remove('selected');
+          }
+          
+          // Update confusion matrix if visible
+          if (currentTab === 'cmTab') {
+            updateConfusionMatrix();
+          }
+          
+          // Highlight selected model
+          highlightSelectedModel();
+        }
+        
+        function handleModelChange(model) {
+          currentModel = model;
+          
+          // Update model info
+          updateModelInfo();
+          
+          // Update confusion matrix if visible
+          if (currentTab === 'cmTab') {
+            updateConfusionMatrix();
+          }
+          
+          // Highlight selected model
+          highlightSelectedModel();
+        }
+        
+          function handleTabChange(tab) {
+            currentTab = tab;
+            
+            // Hide all tabs
+            accuracyTab.classList.add('hidden');
+            f1Tab.classList.add('hidden');
+            cmTab.classList.add('hidden');
+            
+            // Remove selected class from tab buttons
+            accuracyTabBtn.classList.remove('selected');
+            f1TabBtn.classList.remove('selected');
+            cmTabBtn.classList.remove('selected');
+            
+            // Show selected tab and add selected class to button
+            document.getElementById(tab).classList.remove('hidden');
+            
+            if (tab === 'accuracyTab') {
+              accuracyTabBtn.classList.add('selected');
+            } else if (tab === 'f1Tab') {
+              f1TabBtn.classList.add('selected');
+            } else if (tab === 'cmTab') {
+              cmTabBtn.classList.add('selected');
+              updateConfusionMatrix();
+            }
+          }
+          
+          // Modal functions
+          function openInfoModal() {
+            infoModal.classList.add('visible');
+            document.body.classList.add('modal-open');
+          }
+          
+          function closeInfoModal() {
+            infoModal.classList.remove('visible');
+            document.body.classList.remove('modal-open');
+          }
+          
+          // Event Listeners
+          document.addEventListener('DOMContentLoaded', function() {
+            // Vectorizer buttons
+            tfidfBtn.addEventListener('click', () => handleVectorizerChange('tfidf'));
+            bowBtn.addEventListener('click', () => handleVectorizerChange('bow'));
+            
+            // Model selection
+            modelSelect.addEventListener('change', () => handleModelChange(modelSelect.value));
+            
+            // Tab buttons
+            accuracyTabBtn.addEventListener('click', () => handleTabChange('accuracyTab'));
+            f1TabBtn.addEventListener('click', () => handleTabChange('f1Tab'));
+            cmTabBtn.addEventListener('click', () => handleTabChange('cmTab'));
+            
+            // Analyze button
+            analyzeBtn.addEventListener('click', analyzeReview);
+            
+            // Modal buttons
+            infoBtn.addEventListener('click', openInfoModal);
+            closeInfoBtn.addEventListener('click', closeInfoModal);
+            
+            // Initialize the application
+            initializeApp();
+          });
+          
+          // Initialize the application
+          function initializeApp() {
+            // Add CSS to the page
+            const styleElement = document.createElement('style');
+            styleElement.textContent = `
+              body {
+                font-family: 'Poppins', sans-serif;
+                background-color: #0f172a;
+                color: #f8fafc;
+                min-height: 100vh;
+                position: relative;
+              }
+              
+              /* Glass effect */
+              .glass {
+                background: rgba(30, 41, 59, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border-radius: 0.5rem;
+                border: 1px solid rgba(148, 163, 184, 0.2);
+                box-shadow: 0 0 20px rgba(79, 70, 229, 0.1);
+              }
+              
+              /* Glowing elements */
+              .glow-text {
+                color: #f8fafc;
+                text-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+              }
+              
+              .glow-on-hover:hover {
+                box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+                transition: box-shadow 0.3s ease;
+              }
+              
+              .glow-border {
+                box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+                border-color: rgba(139, 92, 246, 0.5);
+              }
+              
+              /* Buttons */
+              .outline-btn {
+                background-color: transparent;
+                border: 1px solid rgba(148, 163, 184, 0.3);
+                color: #cbd5e1;
+                transition: all 0.3s ease;
+              }
+              
+              .outline-btn:hover {
+                border-color: rgba(139, 92, 246, 0.7);
+                color: #f8fafc;
+              }
+              
+              .outline-btn.selected {
+                background-color: rgba(79, 70, 229, 0.2);
+                border-color: rgba(79, 70, 229, 0.7);
+                color: #f8fafc;
+              }
+              
+              .gradient-btn {
+                background: linear-gradient(45deg, #4f46e5, #8b5cf6);
+                border: none;
+                color: #f8fafc;
+                transition: all 0.3s ease;
+              }
+              
+              .gradient-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+              }
+              
+              /* Inputs */
+              .custom-select,
+              .custom-textarea {
+                background-color: rgba(15, 23, 42, 0.7);
+                border: 1px solid rgba(148, 163, 184, 0.3);
+                color: #f8fafc;
+                transition: all 0.3s ease;
+              }
+              
+              .custom-select:focus,
+              .custom-textarea:focus {
+                outline: none;
+                border-color: rgba(139, 92, 246, 0.7);
+                box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+              }
+              
+              /* Table styles */
+              .comparison-table th {
+                background-color: rgba(30, 41, 59, 0.7);
+                color: #8b5cf6;
+                font-weight: 500;
+              }
+              
+              .comparison-table tr {
+                border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+              }
+              
+              .comparison-table tr:hover {
+                background-color: rgba(79, 70, 229, 0.1);
+              }
+              
+              .comparison-table tr.highlighted {
+                background-color: rgba(79, 70, 229, 0.2);
+                border-left: 3px solid #8b5cf6;
+              }
+              
+              /* Confusion matrix */
+              .cm-cell {
+                padding: 12px;
+                text-align: center;
+                border-radius: 4px;
+              }
+              
+              .cm-header {
+                background-color: rgba(30, 41, 59, 0.7);
+                color: #8b5cf6;
+                font-weight: 500;
+              }
+              
+              .cm-tp {
+                background-color: rgba(16, 185, 129, 0.2);
+                color: #34d399;
+                font-weight: bold;
+              }
+              
+              .cm-tn {
+                background-color: rgba(16, 185, 129, 0.2);
+                color: #34d399;
+                font-weight: bold;
+              }
+              
+              .cm-fp {
+                background-color: rgba(239, 68, 68, 0.2);
+                color: #f87171;
+                font-weight: bold;
+              }
+              
+              .cm-fn {
+                background-color: rgba(239, 68, 68, 0.2);
+                color: #f87171; 
+                font-weight: bold;
+              }
+              
+              /* Result section */
+              .result-wrapper {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.5s ease;
+              }
+              
+              .result-wrapper.visible {
+                opacity: 1;
+                transform: translateY(0);
+              }
+              
+              .sentiment-badge {
+                transition: all 0.5s ease;
+              }
+              
+              .sentiment-badge.pulse {
+                animation: pulse 2s infinite;
+              }
+              
+              @keyframes pulse {
+                0% {
+                  transform: scale(1);
+                }
+                50% {
+                  transform: scale(1.05);
+                }
+                100% {
+                  transform: scale(1);
+                }
+              }
+              
+              /* Animations */
+              .scale-in {
+                animation: scaleIn 0.5s ease forwards;
+              }
+              
+              @keyframes scaleIn {
+                from {
+                  opacity: 0;
+                  transform: scale(0.95);
+                }
+                to {
+                  opacity: 1;
+                  transform: scale(1);
+                }
+              }
+              
+              /* Social buttons */
+              .social-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 50%;
+                background-color: rgba(30, 41, 59, 0.7);
+                color: #cbd5e1;
+                transition: all 0.3s ease;
+              }
+              
+              .social-btn:hover {
+                background-color: rgba(79, 70, 229, 0.7);
+                color: #f8fafc;
+                transform: translateY(-2px);
+              }
+              
+              /* Tooltips */
+              .tooltip {
+                position: relative;
+              }
+              
+              .tooltip .tooltiptext {
+                visibility: hidden;
+                width: 120px;
+                background-color: rgba(30, 41, 59, 0.9);
+                color: #f8fafc;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px;
+                position: absolute;
+                z-index: 1;
+                bottom: 125%;
+                left: 50%;
+                margin-left: -60px;
+                opacity: 0;
+                transition: opacity 0.3s;
+                font-size: 0.75rem;
+              }
+              
+              .tooltip:hover .tooltiptext {
+                visibility: visible;
+                opacity: 1;
+              }
+              
+              /* Info modal */
+              .info-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 100;
+                display: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+              }
+              
+              .info-modal.visible {
+                display: flex;
+                opacity: 1;
+              }
+              
+              /* Particles */
+              #particles-container {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: -1;
+              }
+              
+              /* Header wrapper */
+              .header-wrapper {
+                padding: 2rem;
+                margin-bottom: 2rem;
+                border-radius: 1rem;
+              }
+              
+              /* Typed text effect */
+              .typed-text {
+                border-right: 2px solid #8b5cf6;
+                animation: blink 0.7s step-end infinite alternate;
+              }
+              
+              @keyframes blink {
+                50% {
+                  border-color: transparent;
+                }
+              }
+              
+              body.modal-open {
+                overflow: hidden;
+              }
+            `;
+            document.head.appendChild(styleElement);
+            
+            // Initialize charts
+            initializeCharts();
+            
+            // Initialize tables
+            initializeTables();
+            
+            // Update model info
+            updateModelInfo();
+            
+            // Highlight selected model
+            highlightSelectedModel();
+            
+            // Initially hide the result section
+            resultSection.classList.remove('visible');
+            
+            // Show the accuracy tab by default
+            handleTabChange('accuracyTab');
+            
+            // Animation for the header
+            const tl = gsap.timeline();
+            tl.from('.header-wrapper', { duration: 1, y: -50, opacity: 0, ease: 'power3.out' })
+              .from('.scale-in', { duration: 0.6, y: 30, opacity: 0, stagger: 0.2, ease: 'power3.out' }, '-=0.4');
+          }
+
+
+
+
+          // Initialize the application
+function initializeApp() {
+  // Add CSS to the page
+  const styleElement = document.createElement('style');
+  styleElement.textContent = `
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    /* Glass effect */
+    .glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 0.5rem;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: 0 0 20px rgba(79, 70, 229, 0.1);
+    }
+    
+    /* Glowing elements */
+    .glow-text {
+      color: #f8fafc;
+      text-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+    }
+    
+    .glow-on-hover:hover {
+      box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+      transition: box-shadow 0.3s ease;
+    }
+    
+    .glow-border {
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+      border-color: rgba(139, 92, 246, 0.5);
+    }
+    
+    /* Buttons */
+    .outline-btn {
+      background-color: transparent;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: #cbd5e1;
+      transition: all 0.3s ease;
+    }
+    
+    .outline-btn:hover {
+      border-color: rgba(139, 92, 246, 0.7);
+      color: #f8fafc;
+    }
+    
+    .outline-btn.selected {
+      background-color: rgba(79, 70, 229, 0.2);
+      border-color: rgba(79, 70, 229, 0.7);
+      color: #f8fafc;
+    }
+    
+    .gradient-btn {
+      background: linear-gradient(45deg, #4f46e5, #8b5cf6);
+      border: none;
+      color: #f8fafc;
+      transition: all 0.3s ease;
+    }
+    
+    .gradient-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+    }
+    
+    /* Inputs */
+    .custom-select,
+    .custom-textarea {
+      background-color: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: #f8fafc;
+      transition: all 0.3s ease;
+    }
+    
+    .custom-select:focus,
+    .custom-textarea:focus {
+      outline: none;
+      border-color: rgba(139, 92, 246, 0.7);
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+    }
+    
+    /* Table styles */
+    .comparison-table th {
+      background-color: rgba(30, 41, 59, 0.7);
+      color: #8b5cf6;
+      font-weight: 500;
+    }
+    
+    .comparison-table tr {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    
+    .comparison-table tr:hover {
+      background-color: rgba(79, 70, 229, 0.1);
+    }
+    
+    .comparison-table tr.highlighted {
+      background-color: rgba(79, 70, 229, 0.2);
+      border-left: 3px solid #8b5cf6;
+    }
+    
+    /* Confusion matrix */
+    .cm-cell {
+      padding: 12px;
+      text-align: center;
+      border-radius: 4px;
+    }
+    
+    .cm-header {
+      background-color: rgba(30, 41, 59, 0.7);
+      color: #8b5cf6;
+      font-weight: 500;
+    }
+    
+    .cm-tp {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      font-weight: bold;
+    }
+    
+    .cm-tn {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      font-weight: bold;
+    }
+    
+    .cm-fp {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      font-weight: bold;
+    }
+    
+    .cm-fn {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: #f87171; 
+      font-weight: bold;
+    }
+    
+    /* Result section */
+    .result-wrapper {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+    
+    .result-wrapper.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .sentiment-badge {
+      transition: all 0.5s ease;
+    }
+    
+    .sentiment-badge.pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    
+    /* Animations */
+    .scale-in {
+      animation: scaleIn 0.5s ease forwards;
+    }
+    
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    /* Social buttons */
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background-color: rgba(30, 41, 59, 0.7);
+      color: #cbd5e1;
+      transition: all 0.3s ease;
+    }
+    
+    .social-btn:hover {
+      background-color: rgba(79, 70, 229, 0.7);
+      color: #f8fafc;
+      transform: translateY(-2px);
+    }
+    
+    /* Tooltips */
+    .tooltip {
+      position: relative;
+    }
+    
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 120px;
+      background-color: rgba(30, 41, 59, 0.9);
+      color: #f8fafc;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.75rem;
+    }
+    
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    /* Info modal */
+    .info-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .info-modal.visible {
+      display: flex;
+      opacity: 1;
+    }
+    
+    /* Particles */
+    #particles-container {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    
+    /* Header wrapper */
+    .header-wrapper {
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border-radius: 1rem;
+    }
+    
+    /* Typed text effect */
+    .typed-text {
+      border-right: 2px solid #8b5cf6;
+      animation: blink 0.7s step-end infinite alternate;
+    }
+    
+    @keyframes blink {
+      50% {
+        border-color: transparent;
+      }
+    }
+    
+    body.modal-open {
+      overflow: hidden;
+    }
+  `;
+  document.head.appendChild(styleElement);
+  
+  // Initialize charts
+  initializeCharts();
+  
+  // Initialize tables
+  initializeTables();
+  
+  // Update model info
+  updateModelInfo();
+  
+  // Highlight selected model
+  highlightSelectedModel();
+  
+  // Initially hide the result section
+  resultSection.classList.remove('visible');
+  
+  // Show the accuracy tab by default
+  handleTabChange('accuracyTab');
+  
+  // Animation for the header
+  const tl = gsap.timeline();
+  tl.from('.header-wrapper', { duration: 1, y: -50, opacity: 0, ease: 'power3.out' })
+    .from('.scale-in', { duration: 0.6, y: 30, opacity: 0, stagger: 0.2, ease: 'power3.out' }, '-=0.4');
+}
+
+// Initialize the application when the document loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize the application
+  initializeApp();
+  
+  // Add event listeners for the particles.js initialization
+  if (window.particlesJS) {
+    window.particlesJS('particles-container', {
+      particles: {
+        number: {
+          value: 80,
+          density: {
+            enable: true,
+            value_area: 800
+          }
+        },
+        color: {
+          value: '#4f46e5'
+        },
+        shape: {
+          type: 'circle',
+          stroke: {
+            width: 0,
+            color: '#000000'
+          }
+        },
+        opacity: {
+          value: 0.3,
+          random: true,
+          anim: {
+            enable: true,
+            speed: 1,
+            opacity_min: 0.1,
+            sync: false
+          }
+        },
+        size: {
+          value: 3,
+          random: true,
+          anim: {
+            enable: true,
+            speed: 2,
+            size_min: 0.1,
+            sync: false
+          }
+        },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: '#4f46e5',
+          opacity: 0.2,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: 'none',
+          random: true,
+          straight: false,
+          out_mode: 'out',
+          bounce: false,
+          attract: {
+            enable: true,
+            rotateX: 600,
+            rotateY: 1200
+          }
+        }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: {
+            enable: true,
+            mode: 'bubble'
+          },
+          onclick: {
+            enable: true,
+            mode: 'push'
+          },
+          resize: true
+        },
+        modes: {
+          grab: {
+            distance: 140,
+            line_linked: {
+              opacity: 1
+            }
+          },
+          bubble: {
+            distance: 200,
+            size: 5,
+            duration: 2,
+            opacity: 0.8,
+            speed: 3
+          },
+          repulse: {
+            distance: 200,
+            duration: 0.4
+          },
+          push: {
+            particles_nb: 4
+          },
+          remove: {
+            particles_nb: 2
+          }
+        }
+      },
+      retina_detect: true
+    });
+  }
+});
+
+// Add event listeners for UI interactions
+document.addEventListener('DOMContentLoaded', function() {
+  // Vectorizer buttons
+  tfidfBtn.addEventListener('click', () => handleVectorizerChange('tfidf'));
+  bowBtn.addEventListener('click', () => handleVectorizerChange('bow'));
+  
+  // Model selection
+  modelSelect.addEventListener('change', () => handleModelChange(modelSelect.value));
+  
+  // Tab buttons
+  accuracyTabBtn.addEventListener('click', () => handleTabChange('accuracyTab'));
+  f1TabBtn.addEventListener('click', () => handleTabChange('f1Tab'));
+  cmTabBtn.addEventListener('click', () => handleTabChange('cmTab'));
+  
+  // Analyze button
+  analyzeBtn.addEventListener('click', analyzeReview);
+  
+  // Modal buttons
+  infoBtn.addEventListener('click', openInfoModal);
+  closeInfoBtn.addEventListener('click', closeInfoModal);
+  
+  // Add typing animation to header
+// Add typing animation to header
+const title = document.querySelector('.typed-text');
+title.textContent = '';
+let i = 0;
+const texts = ["NLP Models BenchMarking Dashboard", "Review Sentiment Analysis Machine"];
+let textIndex = 0;
+
+function typeWriter() {
+  if (i < texts[textIndex].length) {
+    title.textContent += texts[textIndex].charAt(i);
+    i++;
+    setTimeout(typeWriter, 100); // Pass function reference, not result
+  } else {
+    // Pause at the end of typing
+    setTimeout(() => {
+      // Clear text and reset counter for next text
+      title.textContent = '';
+      i = 0;
+      textIndex = (textIndex + 1) % texts.length; // Loop through texts array
+      typeWriter(); // Start typing the next text
+    }, 2000); // Wait 2 seconds before starting next text
+  }
+}
+
+// Start typing animation after a short delay
+setTimeout(typeWriter, 1000);
+});
+        </script>
+      </body>
+      </html>

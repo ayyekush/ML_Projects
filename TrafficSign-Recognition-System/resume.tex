@@ -1,0 +1,209 @@
+\documentclass[letterpaper,11pt]{article}
+
+
+\usepackage[scaled=0.9]{helvet} % Scale Helvetica font to 90% of its original size
+\renewcommand{\familydefault}{\sfdefault}
+
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{multicol}
+\input{glyphtounicode}
+
+\definecolor{navyblue}{RGB}{0, 0, 128}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in} % Adjust left margin
+\addtolength{\evensidemargin}{-0.5in} % Adjust right margin for even pages
+\addtolength{\textwidth}{1in} % Increase text width
+\addtolength{\topmargin}{-0.7in} % Adjust top margin
+\addtolength{\textheight}{1.0in} % Increase text height
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in} % Set table column separation to zero
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-10pt}\scshape\raggedright\Large
+}{}{0em}{}[\color{black}\titlerule \vspace{-7pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+\renewcommand{\textbf}[1]{{\fontseries{sb}\selectfont #1}}  % medium
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item{
+    {#1 \vspace{-2.5pt}}  % Adjust spacing after each resume item (affects items under experience/projects)
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item % Space before each subheading (affects each position under experience)
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt} % Space after each subheading (affects the overall height of the section)
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7.5pt} % Space after each sub-subheading
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt} % Space after each project heading
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-3.8pt}} % Space after each sub-item
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-3pt}} % Space after item list (affects the spacing below lists)
+
+% New command for the technical skills table
+\newcommand{\skill}[2]{
+  \textbf{#1:} #2
+}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    {\fontsize{34}{34}\selectfont\textbf{\scshape\textcolor{NavyBlue}{Kushagra Agrawal}}}\\[1pt]
+    \normalsize
+    +91-8871267879 \hspace{2pt} $|$ \hspace{2pt} 
+    \href{mailto:kush78799@gmail.com}{\textcolor{NavyBlue}{\textbf{kush78799@gmail.com}}} \hspace{2pt} $|$ \hspace{2pt} 
+    \href{https://www.linkedin.com/in/ayyekush/}{\textcolor{NavyBlue}{\textbf{LinkedIn}}} \hspace{2pt} $|$ \hspace{2pt}
+    \href{https://github.com/ayyekush}{\textcolor{NavyBlue}{\textbf{GitHub}}}
+\end{center}
+
+% \vspace{1pt} 
+%-----------PROFESSIONAL SUMMARY-----------
+\large\section{\textcolor{NavyBlue}{\textbf{Professional Summary}}}
+\resumeSubHeadingListStart
+  \resumeItem{
+    Aspiring Machine Learning Engineer and Data Scientist with a practical, hands-on approach to learning and building. Passionate about Artificial Intelligence, Full Stack Web Development, Web Automation, and Ethical Hacking. Proficient in Deep Learning, NLP, Frontend/Backend development, and deployment of intelligent web applications.
+  }
+\resumeSubHeadingListEnd
+
+
+
+%-----------TECHNICAL SKILLS-----------
+
+\large\section{\textcolor{NavyBlue}{\textbf{Technical Skills}}}
+\begin{tabular}{p{0.46\textwidth}@{\hspace{1.5em}}p{0.46\textwidth}}
+\skill{ML/AI Frameworks}{Scikit-learn,TensorFlow,Keras, OpenCV} & \skill{Cloud Platforms}{Google Cloud Platform (basics), Telegram Bot API} \\[4pt]
+\skill{Programming}{Python, C++, Java, JavaScript, SQL, Bash}  & \skill{Automation \& Scripting}{Selenium, cron (macOS), Ngrok, Bash, virtualenv, threading \& asyncio)}  \\[4pt]
+\skill{Web Development}{HTML/CSS/JS, Express.js, Node.js, EJS, Axios, Multer} & \skill{Databases}{MySQL, MongoDB}  \\[4pt]
+\skill{Deployment}{FastAPI, Flask,Jinja, Streamlit, Docker (basics)} &
+\skill{Visualization}{Matplotlib, Seaborn}  \\[4pt]
+%  \\[4pt]
+% \skill{Automation}{MySQL, MongoDB, ChromaDB} & \skill{Visualization}{Matplotlib, Seaborn} \\[4pt]
+\end{tabular}
+
+\vspace{2pt}
+
+\begin{tabular}{p{0.97\textwidth}}
+\end{tabular}
+
+%-----------PROJECTS-----------
+\large\section{\textcolor{NavyBlue}{\textbf{Projects}}}
+  \resumeSubHeadingListStart
+\resumeProjectHeading
+  {\large\textbf{{\href{XXXgithub}{\textbf{NLP Model Benchmarking Dashboard}}}} $|$ \emph{Scikit-learn, TensorFlow-Keras, Jinja2/CSS/JS}}
+  {\href{XXXlivelink}{\textit{\textcolor{NavyBlue}{LiveLink}}} $|$ \href{XXXgithub}{\textit{\textcolor{NavyBlue}{GitHub}}}}
+  \resumeItemListStart
+    \resumeItem{A comprehensive NLP web app that compares and benchmarks 6+ different ML-NLP models like LogReg, SVM, Naive Bayes, and Neural Networks on book reviews.}
+    \resumeItem{Vectorization techniques such as BagofWords and TFIDF used for thorough comparison and analysis.}
+    \resumeItem{Built on FastAPI backend and Jinja2-powered frontend dashboard for real-time predictions.}
+  \resumeItemListEnd
+\resumeProjectHeading
+    {\large\textbf{{\textbf{Digit Dash – Digit Recognition Game}}} $|$ \emph{CRNN, TensorFlow, Docker, GCP}}
+    {\href{XXXlivelink}{\textit{\textcolor{NavyBlue}{LiveLink}}} $|$ \href{XXXgithub}{\textit{\textcolor{NavyBlue}{GitHub}}}}
+    \resumeItemListStart
+        \resumeItem{A Game where users Draw digits that are tested using CRNN model trained on hand-written digits.}
+        \resumeItem{FastAPI backend serves real-time predictions; app containerized with Docker and deployed on Cloud Run}
+    \resumeItemListEnd
+\resumeProjectHeading
+  {\large\textbf{{\textbf{Amazon Review Scraper \& Analyzer}}} $|$ \emph{Selenium, NLP}}
+  {\href{XXXlivelink}{\textit{\textcolor{NavyBlue}{LiveLink}}} $|$ \href{XXXlivelink}{\textit{\textcolor{NavyBlue}{GitHub}}}}
+  \resumeItemListStart
+    \resumeItem{Web application that automatically scrapes and analyzes given Amazon product reviews in Real-Time.}
+    \resumeItem{Implemented sentiment analysis models with NLP to predict review sentiment and generated word clouds for visualization.}
+    \resumeItem{Created both fast and slow humanoid-like scraping modes to avoid detection while collecting product feedback data.}
+  \resumeItemListEnd
+\resumeProjectHeading
+{\large\textbf{{\textbf{TrafficSignAI – Intelligent Traffic Sign Classifier}}} $|$ \emph{CRNN, PIL, Keras, Computer Vision}}
+{\href{XXXlivelink}{\textit{\textcolor{NavyBlue}{LiveLink}}} $|$ \href{XXXgithub}{\textit{\textcolor{NavyBlue}{GitHub}}}}
+  \resumeItemListStart
+    \resumeItem{Convolutional Neural Network Model that classifies 57 different traffic sign in real-time.}
+    \resumeItem{Integrated model with a FastAPI backend to serve predictions via image uploads and public URLs.}
+    \resumeItem{Enabled live contrast enhancement, resizing, and pre-processing of grayscale images to boost model accuracy.Potential applications include driver-assistance systems and autonomous vehicles.}
+  \resumeItemListEnd
+
+
+  
+\resumeSubHeadingListEnd
+
+%-----------CERTIFICATIONS-----------
+\large\section{\textcolor{NavyBlue}{\textbf{Certifications}}}
+\begin{itemize}
+    \setlength{\itemsep}{-0.4em}
+    \setlength{\parsep}{0em}
+    \setlength{\topsep}{0em}
+    \item Supervised Machine Learning: Regression and Classification — Stanford University 
+    \hfill \textbf{\href{https://coursera.org/verify/ZMTBQVXRZZZD}{\textcolor{NavyBlue}{Certificate Link}}}
+    
+    \item Neural Networks and Deep Learning — DeepLearning.AI 
+    \hfill \textbf{\href{https://coursera.org/verify/Q6MCJFVXQ9EN}{\textcolor{NavyBlue}{Certificate Link}}}
+
+    \item Complete Data Science, Machine Learning, Deep Learning, NLP Bootcamp — Udemy
+\end{itemize}
+
+%-----------EDUCATION-----------
+\large\section{\textcolor{NavyBlue}{\textbf{Education}}}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Institute of Engineering and Technology, DAVV}{Indore}
+    {Bachelor of Engineering - Information Technology}{Aug 2023 – Present}
+    
+  \resumeSubheading
+    {Kendriya Vidyalaya, Pachmarhi}{Madhya Pradesh}
+    {Senior Secondary (CBSE) – PCM; Scored 94.8\%}{2022}
+
+\resumeSubHeadingListEnd
+
+
+\end{document}

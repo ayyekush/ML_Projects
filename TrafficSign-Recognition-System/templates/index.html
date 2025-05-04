@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Sign Identifier</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style2.css">
+    <!-- <link rel="stylesheet" href="/static/style.css"> -->
+</head>
+<body>
+    <header  style="background-color:#4f46e5; margin:0px; padding:20px; border-radius:0;">
+        <div class="container" style="padding: 0; margin:0; background-color:#4f46e5;">
+            <h1 style="font-size:80px; margin:0; padding:0">Traffic Sign Identifier</h1>
+            <h2 style="font-size: x-large; color:rgb(204, 203, 203); text-align:center; justify-content: center; margin:auto;">Distinguishes and Identifies between 42 different Traffic Signs</h2>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <!-- Swapped order: random-section first, then upload-section -->
+            <div class="random-section">
+                <h2><i class="fas fa-random"></i> Test with Random Images</h2>
+                <div class="random-controls">
+                    <label for="randomCount">Number of random images:</label>
+                    <input type="number" id="randomCount" min="1" max="30" >
+                </div>
+                <p>Select random images from our test dataset to see how well our model performs.</p>
+                <button class="btn btn-primary" id="randomBtn"><i class="fas fa-dice"></i> Generate Random Predictions</button>
+            </div>
+            
+            <div class="upload-section">
+                <h2><i class="fas fa-exclamation-triangle"></i> Upload Traffic Sign</h2>
+                <!-- Removed yellow upload area, just showing the button -->
+                <div class="file-input-wrapper">
+                    <!-- <button class="btn btn-primary"><i class="fas fa-folder-open"></i> Browse Files</button> -->
+                    <!-- <input type="file" id="fileInput" accept="image/*" style="font-size: 30px;"> -->
+                    <label for="fileInput" class="custom-file-upload">
+                        📁 Choose Image
+                      </label>
+                      <input type="file" id="fileInput" accept="image/*" />
+                      
+                </div>
+                
+                <div class="or-divider">OR</div>
+                
+                <div class="url-input">
+                    <input type="text" id="imageUrl" placeholder="Paste image URL">
+                    <button id="fetchUrlBtn"><i class="fas fa-link"></i> Fetch</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="road-divider">
+            <div class="road-stripes"></div>
+        </div>
+        
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <h2><i class="fas fa-chart-bar"></i> Prediction Results</h2>
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>Processing your request...</p>
+            </div>
+            <div class="results-grid" id="resultsGrid"></div>
+        </div>
+    </div>
+    
+    <div class="modal" id="cropModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeCropModal">&times;</span>
+            <h2><i class="fas fa-crop-alt"></i> Crop Traffic Sign</h2>
+            <p>Focus on the traffic sign for better prediction results</p>
+            <div class="crop-container">
+                <img id="cropperImage" src="">
+            </div>
+            <div class="buttons" style="justify-content: flex-end; margin-top: 20px;">
+                <button class="btn btn-secondary" id="cancelCropBtn"><i class="fas fa-times"></i> Cancel</button>
+                <button class="btn btn-primary" id="applyCropBtn"><i class="fas fa-check"></i> Apply & Predict</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/spine.js">
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+numpy
+pandas
+Pillow
+keras
+tensorflow
+jinja2
+requests
+matplotlib

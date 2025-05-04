@@ -24,8 +24,8 @@ def scrapeReviewFn(method,userLink,n_reviews):
         #returns a generator fn to scrape one by one on command
         return scrapeNReviewsHumanoid(n_reviews,driver)
 
-from MODEL.Prediction import finalPrediction
-from MODEL.EDAFns import wordRankingDF,wordCloud
+from Prediction import finalPrediction
+from EDAFns import wordRankingDF,wordCloud
 
 @app.post("/fast-reviews-scrape")
 async def fastReviewsScrape(request: Request):
@@ -83,3 +83,5 @@ async def slowReviewsScrape(request: Request):
         "prediction": prediction,
         "WordCloudAddress": "/static/alpha.png",
     })
+if __name__=="__main__":
+    print("run through uvicorn")

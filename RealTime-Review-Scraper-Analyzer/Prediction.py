@@ -1,8 +1,8 @@
 import joblib
 from PreprocessFns import preprocess,emphasise_negation,lemmatize_text
 
-tfidf_vectorizer=joblib.load("tfidf_vectorizer.pkl")
-final_svc_model=joblib.load("sentiment_model.pkl")
+tfidf_vectorizer=joblib.load("./MODEL/tfidf_vectorizer.pkl")
+final_svc_model=joblib.load("./MODEL/sentiment_model.pkl")
 
 def predict_sentiment(text):
     preprocessed_text=lemmatize_text(emphasise_negation(preprocess(text)))
